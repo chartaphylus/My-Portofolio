@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { ReactNode } from "react";
 import { FaCode, FaLaptopCode, FaServer, FaMobileAlt, FaGitAlt, FaPhp, FaJs, FaBootstrap } from "react-icons/fa";
 import { SiLaravel, SiNextdotjs, SiBootstrap, SiTailwindcss, SiFlutter, SiAndroidstudio, SiJavascript, SiDart, SiLaragon } from "react-icons/si";
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
@@ -51,6 +52,12 @@ export default function Home() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  type HorizontalScrollContainerProps = {
+  children: ReactNode;
+  id?: string;
+};
+
 
   const projects = [
     { 
@@ -146,7 +153,7 @@ export default function Home() {
     {
       title: "Education Mentor",
       company: "Rabbaanii Islamic School",
-      logo: "/image/rabbaanii.png",
+      logo: "/image/Rabbaanii.png",
       type: "Full-time",
       period: "2025 - Present",
       status: "Education",
@@ -155,16 +162,15 @@ export default function Home() {
     }
   ];
 
-  const HorizontalScrollContainer = ({ children, id }) => {
+    const HorizontalScrollContainer = ({ children, id }: HorizontalScrollContainerProps) => {
     return (
       <div className="relative group">
-        <div 
+        <div
           id={id}
           className="flex overflow-x-auto gap-6 pb-4 scroll-smooth scrollbar-hide snap-x snap-mandatory"
           style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitScrollbar: { display: 'none' }
+            scrollbarWidth: "none", // untuk Firefox
+            msOverflowStyle: "none", // untuk IE/Edge lama
           }}
         >
           {children}
