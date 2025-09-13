@@ -154,8 +154,8 @@ export default function Home() {
       title: "Education Mentor",
       company: "Rabbaanii Islamic School",
       logo: "/image/Rabbaanii.png",
-      type: "Full-time",
-      period: "2025 - Present",
+      type: "Contract",
+      period: "July 2025 - Present",
       status: "Education",
       description: "Mentoring and educating students in technology and software development, fostering the next generation of tech professionals through hands-on guidance and curriculum development.",
       statusColor: "from-blue-500 to-cyan-500"
