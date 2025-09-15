@@ -88,14 +88,21 @@ export default function Home() {
       tech: ["HTML", "CSS", "JavaScript"],
       status: "Completed",
     },
+    { 
+      title: "TokoKu", 
+      desc: "Trusted cashier management", 
+      img: "/project/TokoKu.png",
+      tech: ["Laravel", "Bootstrap", "MySQL", "PHP"],
+      status: "Completed",
+    },
   ];
 
   const certificates = [
-    { img: "/sertifikat/sertifikat1.png", title: "Figma AI Workflow", issuer: "Udemy", date: "2025" },
-    { img: "/sertifikat/sertifikat2.png", title: "Jadilah Manager kelas yang Profesional", issuer: "Robbaani Islamic School", date: "2025" },
+    { img: "/sertifikat/sertifikat1.jpg", title: "Google Play Listing", issuer: "Google Play Academy", date: "2024" },
+    { img: "/sertifikat/sertifikat2.png", title: "Figma AI Workflow", issuer: "Udemy", date: "2025" },
     { img: "/sertifikat/sertifikat3.png", title: "interview & CV Mastery", issuer: "Udemy", date: "2025" },
     { img: "/sertifikat/sertifikat4.png", title: "JavaScript Practicals Crash", issuer: "Udemy", date: "2025" },
-    { img: "/sertifikat/sertifikat5.jpg", title: "Google Play Listing", issuer: "Google Play Academy", date: "2024" },
+    { img: "/sertifikat/sertifikat5.png", title: "Jadilah Manager kelas yang Profesional", issuer: "Robbaani Islamic School", date: "2025" },
     { img: "/sertifikat/sertifikat6.png", title: "Canva Zero To Hero", issuer: "Udemy", date: "2025" },
     { img: "/sertifikat/sertifikat7.png", title: "Microsoft Ofice Sertification", issuer: "Udemy", date: "2025" },
     { img: "/sertifikat/sertifikat8.png", title: "Media Training", issuer: "Udemy", date: "2025" },
@@ -141,13 +148,13 @@ export default function Home() {
 
   const workExperience = [
     {
-      title: "Senior Software Engineer",
+      title: "Senior Fullstack Engineer",
       company: "Indo Caris International",
       logo: "/image/indo_caris.jpg",
-      type: "Contract",
-      period: "September 2025 - Present",
-      status: "Current",
-      description: "Working as a contract employee at Indo Caris International, contributing to software development and technology solutions that drive business growth and innovation.",
+      type: "Full time",
+      period: "July 2025 - Present",
+      status: "development",
+      description: "Working as a full time employee at Indo Caris International, contributing to software development and technology solutions that drive business growth and innovation.",
       statusColor: "from-green-500 to-emerald-500"
     },
     {
@@ -169,8 +176,8 @@ export default function Home() {
           id={id}
           className="flex overflow-x-auto gap-6 pb-4 scroll-smooth scrollbar-hide snap-x snap-mandatory"
           style={{
-            scrollbarWidth: "none", // untuk Firefox
-            msOverflowStyle: "none", // untuk IE/Edge lama
+            scrollbarWidth: "none", 
+            msOverflowStyle: "none", 
           }}
         >
           {children}
@@ -249,7 +256,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-spin slow opacity-20"></div>
               <Image
-                src="/image/profile.jpg"
+                src="/image/profile.png"
                 alt="M. Khafid Bahtiar"
                 width={140}
                 height={140}
@@ -264,7 +271,7 @@ export default function Home() {
             <div className="flex items-center gap-3 mb-6">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
               <p className="text-xl md:text-2xl font-light text-cyan-200">
-                Senior Software Engineer
+                Software Engineer
               </p>
             </div>
             
@@ -275,7 +282,7 @@ export default function Home() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://drive.google.com/file/d/1XYRougBGaXJrB3Rn-nInkekfiItYRmJC/view?usp=sharing"
+                href="https://drive.google.com/file/d/1P5bgLUnX2Pp6bDDvwOljWbD6-RJg8n1a/view?usp=sharing"
                 download
                 className="inline-flex items-center bg-gradient-to-r from-cyan-500 to-purple-500 text-black font-semibold px-8 py-4 rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 group border border-cyan-400/30"
               >
@@ -308,7 +315,7 @@ export default function Home() {
             </div>
             <div className="prose max-w-none">
               <p className="text-gray-300 leading-relaxed text-lg mb-6">
-                I am <strong className="text-cyan-400">M. Khafid Bahtiar</strong>, a dedicated Senior Software Engineer specializing in web and mobile application development. With extensive expertise in <strong className="text-purple-400">Laravel</strong>, <strong className="text-cyan-400">Flutter</strong>, and modern JavaScript frameworks, I am committed to continuous learning and delivering cutting-edge technological solutions.
+                I am <strong className="text-cyan-400">M. Khafid Bahtiar</strong>, a dedicated Software Engineer specializing in web and mobile application development. With extensive expertise in <strong className="text-purple-400">Laravel</strong>, <strong className="text-cyan-400">Flutter</strong>, and modern JavaScript frameworks, I am committed to continuous learning and delivering cutting-edge technological solutions.
               </p>
               <p className="text-gray-300 leading-relaxed text-lg">
                 My passion lies in creating efficient, scalable, and user-friendly applications that solve real-world problems. I thrive in dynamic team environments and am always ready to take on challenging projects that push the boundaries of technology.
@@ -427,7 +434,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-200 mb-1">D4 Software Engineering Technology</h3>
+                    <h3 className="text-xl font-bold text-gray-200 mb-1">D4 | Software Engineering Technology</h3>
                     <p className="text-green-400 font-semibold mb-2">Politeknik IDN</p>
                     <p className="text-gray-400 text-sm">July 2024 • Jonggol, Bogor, Indonesia</p>
                   </div>
@@ -447,7 +454,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-200 mb-1">SMP - SMA</h3>
+                    <h3 className="text-xl font-bold text-gray-200 mb-1">Junior & Senior High School</h3>
                     <p className="text-purple-400 font-semibold mb-2">Ma'had Abu Dzar Al-Ghifari</p>
                     <p className="text-gray-400 text-sm">July 2018 - June 2024 • Kediri, Lombok Barat, Indonesia</p>
                   </div>
@@ -720,7 +727,7 @@ export default function Home() {
                     Send Message
                   </a>
                   <a
-                    href="https://drive.google.com/file/d/1XYRougBGaXJrB3Rn-nInkekfiItYRmJC/view?usp=sharing"
+                    href="https://drive.google.com/file/d/1P5bgLUnX2Pp6bDDvwOljWbD6-RJg8n1a/view?usp=sharing"
                     download
                     className="inline-flex items-center bg-transparent border-2 border-cyan-400 text-cyan-400 font-semibold px-8 py-4 rounded-2xl hover:bg-cyan-400/10 hover:scale-105 transition-all duration-300 group shadow-lg shadow-cyan-400/10"
                   >
@@ -741,7 +748,7 @@ export default function Home() {
             <div className="lg:col-span-2">
               <h3 className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text font-bold text-2xl mb-4">M. Khafid Bahtiar</h3>
               <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
-                Senior Software Engineer passionate about creating innovative solutions 
+                Software Engineer passionate about creating innovative solutions 
                 in web and mobile development. Let's build something amazing together.
               </p>
               <div className="flex gap-4">
@@ -800,8 +807,8 @@ export default function Home() {
                 <li>Web Development</li>
                 <li>Mobile App Development</li>
                 <li>API Development</li>
-                <li>Database Design</li>
-                <li>Technical Consulting</li>
+                <li>Database Management</li>
+                <li>UI/UX Design</li>
               </ul>
             </div>
           </div>
