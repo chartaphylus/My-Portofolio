@@ -8,9 +8,9 @@ export default function SplashScreen() {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setStep(1), 2000), 
-      setTimeout(() => setStep(2), 4000), 
-      setTimeout(() => setIsLoading(false), 6000), 
+      setTimeout(() => setStep(1), 3000), 
+      setTimeout(() => setStep(2), 5000), 
+      setTimeout(() => setIsLoading(false), 6500), 
     ]
     return () => timers.forEach(clearTimeout)
   }, [])

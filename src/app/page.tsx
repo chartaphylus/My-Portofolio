@@ -28,6 +28,7 @@ import FloatingElements from "@/components/FloatingElements";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollReveal from "@/components/ScrollReveal";
 
+
 export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
@@ -197,6 +198,16 @@ export default function Home() {
     );
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+    { href: "#about", label: "About" },
+    { href: "#skills", label: "Skills" },
+    { href: "#experience", label: "Experience" },
+    { href: "#projects", label: "Projects" },
+    { href: "#contact", label: "Contact" },
+  ]
+
   return (
     <main className="min-h-screen bg-gray-900 text-gray-100 relative overflow-x-hidden">
 
@@ -255,13 +266,55 @@ export default function Home() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden p-2 rounded-lg hover:bg-gray-800 border border-cyan-500/30">
-              <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-800 border border-cyan-500/30"
+          >
+            <svg
+              className="w-6 h-6 text-cyan-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
         </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {menuOpen && (
+        <div className="md:hidden bg-black/95 border-t border-cyan-500/20 px-4 py-3 space-y-2 animate-fadeIn">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className={`block px-3 py-2 rounded-md font-medium transition-all duration-200 ${
+                activeSection === item.href.slice(1)
+                  ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-400 border border-cyan-500/30"
+                  : "text-gray-300 hover:text-cyan-400"
+              }`}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      )}
       </nav>
 
       {/* Hero Section */}
@@ -277,15 +330,19 @@ export default function Home() {
           <div className="flex flex-col items-center text-center">
             <div className="mb-8 relative">
               <OrbitGalaxy className="profile-image-container">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                {/* Glow Layer */}
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
+                
+                {/* Orbit Ring */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-spin-slow opacity-20"></div>
+                
+                {/* Profile Image */}
                 <Image
                   src="/image/profile.png"
                   alt="M. Khafid Bahtiar"
-                  width={200}
-                  height={200}
-                  className="relative w-full h-full object-cover rounded-full border-4 border-cyan-400/30 shadow-2xl shadow-cyan-500/20 hover:scale-105 transition-all duration-500 hover-glow"
-                />
+                  width={160}
+                  height={160}
+                  className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-52 md:h-52 object-cover rounded-full border-4 border-cyan-400/30 shadow-2xl shadow-cyan-500/20 hover:scale-105 transition-all duration-500 hover-glow" />
               </OrbitGalaxy>
             </div>
 
