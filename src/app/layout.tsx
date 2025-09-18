@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import IntroProvider from "@/components/IntroProvider"; // wrapper intro
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,20 +15,19 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Profesional Portfolio | M. Khafid Bahtiar",
-  description: "Welcome to my professional portfolio website, showcasing my skills, projects, and experience in web development and design.",
+  description:
+    "Welcome to my professional portfolio website, showcasing my skills, projects, and experience in web development and design.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <IntroProvider>{children}</IntroProvider>
       </body>
     </html>
   );

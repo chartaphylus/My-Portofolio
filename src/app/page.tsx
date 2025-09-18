@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ReactNode } from "react";
 import { FaCode, FaLaptopCode, FaServer, FaMobileAlt, FaGitAlt, FaPhp, FaJs, FaBootstrap } from "react-icons/fa";
-import { SiLaravel, SiNextdotjs, SiBootstrap, SiTailwindcss, SiFlutter, SiAndroidstudio, SiJavascript, SiDart, SiLaragon } from "react-icons/si";
+import { SiLaravel, SiNextdotjs, SiBootstrap, SiTailwindcss, SiFlutter, SiAndroidstudio, SiJavascript, SiDart, SiLaragon, SiFigma } from "react-icons/si";
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
 import {
   FaInstagram,
@@ -22,6 +22,11 @@ import {
   FaStar,
   FaCodeBranch
 } from "react-icons/fa";
+import OrbitGalaxy from "@/components/OrbitGalaxy";
+import PerformanceOptimizer from "@/components/PerformanceOptimizer";
+import FloatingElements from "@/components/FloatingElements";
+import CustomCursor from "@/components/CustomCursor";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -140,8 +145,10 @@ export default function Home() {
       title: "Development Tools",
       icon: FaServer,
       skills: [
-        { name: "Git", icon: FaGitAlt, color: "text-orange-400", level: "Advanced" },
-        { name: "Laragon", icon: SiLaragon, color: "text-green-400", level: "Advanced" }
+        { name: "Laragon", icon: SiLaragon, color: "text-green-400", level: "Advanced" },
+        { name: "GitHub", icon: FaGithub, color: "text-gray-300", level: "Advanced" },
+        { name :"Postman", icon: FaServer, color: "text-orange-400", level: "Intermediate" },
+        { name: "Figma", icon: SiFigma, color: "text-pink-400", level: "Intermediate" }
       ]
     }
   ];
@@ -192,6 +199,22 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-900 text-gray-100 relative overflow-x-hidden">
+
+      {/* Performance Optimizer */}
+      <PerformanceOptimizer />
+
+      {/* CustomCursor */}
+      <CustomCursor />
+
+      
+      {/* Floating Elements */}
+      <FloatingElements />
+      
+      {/* Cyber Background Effects */}
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 -z-10"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)] -z-10"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.1),transparent_50%)] -z-10"></div>
+
       {/* Cyber Background Effects */}
       <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 -z-10"></div>
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)] -z-10"></div>
@@ -253,16 +276,20 @@ export default function Home() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col items-center text-center">
             <div className="mb-8 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-spin slow opacity-20"></div>
-              <Image
-                src="/image/profile.png"
-                alt="M. Khafid Bahtiar"
-                width={140}
-                height={140}
-                className="relative rounded-full border-2 border-cyan-400/30 shadow-2xl shadow-cyan-500/20 hover:scale-105 transition-all duration-500"
-              />
+              <OrbitGalaxy className="profile-image-container">
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-spin-slow opacity-20"></div>
+                <Image
+                  src="/image/profile.png"
+                  alt="M. Khafid Bahtiar"
+                  width={200}
+                  height={200}
+                  className="relative w-full h-full object-cover rounded-full border-4 border-cyan-400/30 shadow-2xl shadow-cyan-500/20 hover:scale-105 transition-all duration-500 hover-glow"
+                />
+              </OrbitGalaxy>
             </div>
+
+            <br />
             
             <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight animate-pulse">
               M. Khafid Bahtiar
@@ -305,6 +332,7 @@ export default function Home() {
         
         {/* About Me */}
         <section id="about" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl shadow-xl shadow-cyan-500/10 p-8 md:p-12 border border-cyan-500/20 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300">
             <div className="flex items-center mb-8">
               <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
@@ -322,10 +350,12 @@ export default function Home() {
               </p>
             </div>
           </div>
+          </ScrollReveal>
         </section>
 
         {/* Skills Section */}
         <section id="skills" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
               <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
@@ -363,10 +393,12 @@ export default function Home() {
               </div>
             ))}
           </div>
+          </ScrollReveal>
         </section>
 
         {/* Experience Section */}
         <section id="experience" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="flex items-center mb-12">
             <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
             <div>
@@ -412,10 +444,12 @@ export default function Home() {
               </div>
             ))}
           </div>
+          </ScrollReveal>
         </section>
 
         {/* Education Section */}
         <section id="education" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="flex items-center mb-12">
             <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
             <div>
@@ -465,10 +499,12 @@ export default function Home() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
         </section>
 
         {/* Projects Section */}
         <section id="projects" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
               <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
@@ -536,10 +572,12 @@ export default function Home() {
               </div>
             ))}
           </HorizontalScrollContainer>
+          </ScrollReveal>
         </section>
 
         {/* Certificates Section */}
         <section id="certificates" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
               <div className="w-2 h-16 bg-gradient-to-b from-cyan-400 to-purple-400 rounded-full mr-6 shadow-lg shadow-cyan-400/50"></div>
@@ -597,10 +635,12 @@ export default function Home() {
               </div>
             ))}
           </HorizontalScrollContainer>
+          </ScrollReveal>
         </section>
 
         {/* Contact Section */}
         <section id="contact" className="scroll-mt-24">
+          <ScrollReveal direction="up" delay={200}>
           <div className="bg-gradient-to-br from-gray-800/80 via-gray-900/80 to-black/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-cyan-500/20 p-8 md:p-12 text-gray-100 relative overflow-hidden border border-cyan-500/20">
             {/* Cyber Background Effects */}
             <div className="absolute top-0 right-0 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl -translate-y-32 translate-x-32"></div>
@@ -738,6 +778,7 @@ export default function Home() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
         </section>
       </div>
 
