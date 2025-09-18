@@ -394,14 +394,17 @@ body {
   display: none;
 }
 
-/* Additional custom utilities */
-
-@layer utilities {
+@media (max-width: 640px) {
   .animate-spin-slow {
-    animation: spin 8s linear infinite;
+    animation-duration: 35s;
   }
-  .animate-spin-slower {
-    animation: spin 15s linear infinite;
+  .animate-spin-reverse-slow {
+    animation-duration: 40s;
+  }
+
+  /* Kurangi partikel di layar kecil */
+  .orbit-particle:nth-child(n+3) {
+    display: none;
   }
 }
 
