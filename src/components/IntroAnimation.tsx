@@ -59,7 +59,7 @@ export default function SplashScreen() {
 
               {/* Gambar Logo */}
               <motion.img
-                src="/image/logo.png"
+                src="/image/Logo.png"
                 alt="Logo"
                 className="w-40 h-40 object-cover rounded-full border-4 border-white shadow-lg relative z-10"
                 initial={{ scale: 0 }}
