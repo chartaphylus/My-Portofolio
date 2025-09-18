@@ -333,8 +333,14 @@ export default function Home() {
                 {/* Glow Layer */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
                 
-                {/* Orbit Ring */}
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-spin-slow opacity-20"></div>
+                  {/* Orbit Ring 1 */}
+                  <div className="absolute inset-0 rounded-full border border-cyan-400/30 animate-spin-slow will-change-transform"></div>
+
+                  {/* Orbit Ring 2 */}
+                  <div className="absolute inset-0 rounded-full border border-purple-400/20 animate-spin-slower will-change-transform scale-110"></div>
+
+                  {/* Orbit Ring 3 */}
+                  <div className="absolute inset-0 rounded-full border border-pink-400/10 animate-spin-slow will-change-transform scale-125"></div>
                 
                 {/* Profile Image */}
                 <Image

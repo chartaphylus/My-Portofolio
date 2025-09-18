@@ -393,3 +393,15 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Additional custom utilities */
+
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+  .animate-spin-slower {
+    animation: spin 15s linear infinite;
+  }
+}
+
