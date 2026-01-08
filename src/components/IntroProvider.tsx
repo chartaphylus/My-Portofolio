@@ -10,10 +10,10 @@ export default function IntroProvider({
 }) {
   const [showIntro, setShowIntro] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowIntro(false), 6000); // 6 detik
-    return () => clearTimeout(timer);
-  }, []);
+  const handleAnimationComplete = () => {
+    setShowIntro(false);
+  }; // removed useCallback usage as it might need refactor import, doing it simpler by fixing Dependency first
 
-  return <>{showIntro ? <IntroAnimation /> : children}</>;
+
+  return <>{showIntro ? <IntroAnimation onComplete={handleAnimationComplete} /> : children}</>;
 }
