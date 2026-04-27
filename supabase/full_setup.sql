@@ -195,16 +195,6 @@ CREATE POLICY "Admin Delete" ON storage.objects FOR DELETE USING ( bucket_id = '
 -- Insert Profile (Update ID with your Supabase Auth UID if needed)
 INSERT INTO profiles (name, role, tagline, bio, profile_image_url, cv_url, email, phone, location, socials)
 VALUES (
-  'M. Khafid Bahtiar',
-  'Software Engineer',
-  'Building high-performance digital experiences',
-  'I am M. Khafid Bahtiar, a dedicated Software Engineer specializing in web and mobile application development. With extensive expertise in Laravel, Flutter, and modern JavaScript frameworks.',
-  '/image/profile.png',
-  'https://drive.google.com/file/d/1P5bgLUnX2Pp6bDDvwOljWbD6-RJg8n1a/view?usp=sharing',
-  'mkhafid.work@gmail.com',
-  '+62895341675030',
-  'Jl. Diponegoro, Melayu, kec. Asakota, Kota Bima, NTB, 84119',
-  '{"instagram": "https://www.instagram.com/rain.kyalka_33", "facebook": "https://www.facebook.com/profile.php?id=61576972962347", "linkedin": "https://www.linkedin.com/in/khafid-bahtiar", "github": "https://github.com"}'
 ) ON CONFLICT DO NOTHING;
 
 -- Initial Stats
