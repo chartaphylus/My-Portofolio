@@ -17,8 +17,7 @@ export async function runHealthCheck() {
     // 2. Check Essential Assets (Simulation)
     healthReport.push("✅ *Assets:* Favicon/Logo configured");
 
-    const statusEmoji = isHealthy ? "🟢" : "🔴";
-    const message = `${statusEmoji} *Portfolio Health Report*\n\n${healthReport.join('\n')}\n\n*Status:* ${isHealthy ? "All systems operational" : "Issues detected"}`;
+    const message = `${healthReport.join('\n')}\n\n*Status:* ${isHealthy ? "All systems operational" : "Issues detected"}`;
 
     return { isHealthy, message, report: healthReport };
 

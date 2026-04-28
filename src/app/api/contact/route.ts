@@ -21,8 +21,8 @@ export async function POST(request: Request) {
     }
 
     // 2. Send Telegram Notification (if configured)
-    const text = `🔔 *New Message Received*\n\n*Name:* ${name}\n*Email:* ${email}\n\n*Message:*\n${message}`;
-    await sendTelegramNotification(text, "Contact Form");
+    const text = `👤 *Name:* ${name}\n📧 *Email:* ${email}\n\n💬 *Message:*\n${message}`;
+    await sendTelegramNotification(text, "Contact Form", "message");
 
     return NextResponse.json({ success: true, message: 'Message sent successfully.' });
 

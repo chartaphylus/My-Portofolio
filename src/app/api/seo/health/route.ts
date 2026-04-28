@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const { isHealthy, message, report } = await runHealthCheck();
     
-    await sendTelegramNotification(message, "Health Check API");
+    await sendTelegramNotification(message, "Health Check API", "system");
 
     return NextResponse.json({ 
       status: isHealthy ? 'healthy' : 'degraded',

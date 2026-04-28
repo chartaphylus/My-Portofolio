@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendTelegramMenu, sendRawTelegramMessage, answerCallbackQuery } from '@/lib/telegram';
+import { sendTelegramMenu, sendRawTelegramMessage, answerCallbackQuery, sendTelegramNotification } from '@/lib/telegram';
 import { runHealthCheck } from '@/lib/seo-health';
 
 export async function POST(request: Request) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       if (callbackData === 'check_health_portfolio') {
         await answerCallbackQuery(callbackQueryId, "Sedang mengecek kesehatan...");
         const { message } = await runHealthCheck();
-        await sendRawTelegramMessage(chatId, message);
+        await sendTelegramNotification(message, "Telegram Bot", "system");
       } else if (callbackData === 'other_websites') {
         await answerCallbackQuery(callbackQueryId, "Fitur ini segera hadir!");
         await sendRawTelegramMessage(chatId, "🚧 *Fitur Website Lain* akan segera hadir di update berikutnya.");
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       await sendTelegramMenu(chatId);
     } else if (text === '/health') {
       const { message } = await runHealthCheck();
-      await sendRawTelegramMessage(chatId, message);
+      await sendTelegramNotification(message, "Telegram Bot", "system");
     } else if (text) {
       await sendRawTelegramMessage(chatId, "Pilih opsi di bawah ini untuk memulai:");
       await sendTelegramMenu(chatId);

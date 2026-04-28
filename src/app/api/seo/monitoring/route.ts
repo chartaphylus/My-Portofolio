@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     if (event === '404_DETECTED') {
       const message = `⚠️ *Broken Link Detected (404)*\n\n*Path:* \`${path}\` \n*Device:* ${userAgent}`;
-      await sendTelegramNotification(message, "404 Monitor");
+      await sendTelegramNotification(message, "404 Monitor", "system");
     }
 
     return NextResponse.json({ success: true });

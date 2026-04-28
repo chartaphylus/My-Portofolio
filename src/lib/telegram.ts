@@ -2,14 +2,28 @@
  * Telegram Utility for Portfolio Notifications & Webhook handling
  */
 
-export async function sendTelegramNotification(message: string, source: string = "System") {
+export type NotificationType = 'system' | 'message';
+
+export async function sendTelegramNotification(
+  message: string, 
+  source: string = "System", 
+  type: NotificationType = 'system',
+  websiteName: string = "Khafid Portfolio"
+) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) return false;
 
-  const prefix = "🛡️ *SEO Health Monitor Portfolio*";
-  const fullMessage = `${prefix}\n*Source:* ${source}\n\n${message}`;
+  let prefix = "";
+  if (type === 'system') {
+    prefix = `🛡️ *[MONITOR] SEO Health Report*\n🌐 *Website:* ${websiteName}`;
+  } else {
+    prefix = `✉️ *[INBOX] New Message Received*\n🌐 *Website:* ${websiteName}`;
+  }
+
+  const divider = "────────────────────";
+  const fullMessage = `${prefix}\n${divider}\n*Source:* ${source}\n\n${message}`;
 
   return sendRawTelegramMessage(chatId, fullMessage);
 }
@@ -18,7 +32,7 @@ export async function sendTelegramMenu(chatId: string) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) return false;
 
-  const text = "👋 *Halo! Saya Bot Monitor Portfolio Anda.*\n\nSilakan pilih website yang ingin Anda cek:";
+  const text = "👋 *Halo! Saya Bot Monitor Anda.*\n\nSilakan pilih website yang ingin Anda cek:";
   const keyboard = {
     inline_keyboard: [
       [
