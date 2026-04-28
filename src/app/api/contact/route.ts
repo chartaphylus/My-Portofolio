@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { sendTelegramNotification } from '@/lib/telegram';
 
 export async function POST(request: Request) {
   try {
@@ -20,28 +21,8 @@ export async function POST(request: Request) {
     }
 
     // 2. Send Telegram Notification (if configured)
-    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
-    const telegramChatId = process.env.TELEGRAM_CHAT_ID;
-
-    if (telegramBotToken && telegramChatId) {
-      const telegramApiUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-      const text = `🔔 *New Message on Portfolio*\n\n*Name:* ${name}\n*Email:* ${email}\n\n*Message:*\n${message}`;
-
-      try {
-        await fetch(telegramApiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: telegramChatId,
-            text: text,
-            parse_mode: 'Markdown'
-          })
-        });
-      } catch (telegramError) {
-        // We do not fail the request if Telegram fails, just log it.
-        console.error('Telegram API Error:', telegramError);
-      }
-    }
+    const text = `🔔 *New Message Received*\n\n*Name:* ${name}\n*Email:* ${email}\n\n*Message:*\n${message}`;
+    await sendTelegramNotification(text, "Contact Form");
 
     return NextResponse.json({ success: true, message: 'Message sent successfully.' });
 
