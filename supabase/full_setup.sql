@@ -100,7 +100,32 @@ CREATE TABLE IF NOT EXISTS certifications (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
--- Site Stats
+-- Detailed Traffic Stats (Per Page & Browser/Device)
+CREATE TABLE IF NOT EXISTS traffic_stats (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  path TEXT UNIQUE NOT NULL,
+  view_count INTEGER DEFAULT 0,
+  desktop_count INTEGER DEFAULT 0,
+  mobile_count INTEGER DEFAULT 0,
+  tablet_count INTEGER DEFAULT 0,
+  chrome_count INTEGER DEFAULT 0,
+  safari_count INTEGER DEFAULT 0,
+  firefox_count INTEGER DEFAULT 0,
+  edge_count INTEGER DEFAULT 0,
+  others_count INTEGER DEFAULT 0,
+  last_viewed TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Daily Traffic (For Charts)
+CREATE TABLE IF NOT EXISTS daily_traffic (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  date DATE UNIQUE NOT NULL DEFAULT CURRENT_DATE,
+  view_count INTEGER DEFAULT 0,
+  unique_users INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- Legacy Site Stats (Monthly)
 CREATE TABLE IF NOT EXISTS site_stats (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   month_year TEXT UNIQUE NOT NULL, -- Format: YYYY-MM
@@ -167,6 +192,14 @@ ALTER TABLE certifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public certifications read access" ON certifications FOR SELECT USING (true);
 CREATE POLICY "Admin certifications full access" ON certifications FOR ALL USING (auth.role() = 'authenticated');
 
+-- Traffic Stats
+ALTER TABLE traffic_stats ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can increment traffic_stats" ON traffic_stats FOR ALL USING (true) WITH CHECK (true);
+
+-- Daily Traffic
+ALTER TABLE daily_traffic ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can increment daily_traffic" ON daily_traffic FOR ALL USING (true) WITH CHECK (true);
+
 -- Site Stats
 ALTER TABLE site_stats ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public can increment views" ON site_stats FOR ALL USING (true) WITH CHECK (true);
@@ -192,12 +225,11 @@ CREATE POLICY "Admin Update" ON storage.objects FOR UPDATE USING ( bucket_id = '
 CREATE POLICY "Admin Delete" ON storage.objects FOR DELETE USING ( bucket_id = 'portfolio-assets' AND auth.role() = 'authenticated' );
 
 -- 4. Initial Data
--- Insert Profile (Update ID with your Supabase Auth UID if needed)
-INSERT INTO profiles (name, role, tagline, bio, profile_image_url, cv_url, email, phone, location, socials)
-VALUES (
-) ON CONFLICT DO NOTHING;
-
 -- Initial Stats
 INSERT INTO site_stats (month_year, view_count) 
 VALUES (to_char(now(), 'YYYY-MM'), 0)
 ON CONFLICT (month_year) DO NOTHING;
+
+INSERT INTO daily_traffic (date, view_count, unique_users) 
+VALUES (CURRENT_DATE, 0, 0)
+ON CONFLICT (date) DO NOTHING;

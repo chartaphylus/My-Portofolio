@@ -53,13 +53,16 @@ export default function PublicNavbar({ profile }: { profile: any }) {
 
         {/* Actions */}
         <div className="flex items-center gap-2 sm:gap-6 shrink-0">
-          {mounted && (
+          {mounted ? (
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-[var(--theme-text)]/[0.03] border border-[var(--theme-text)]/5 transition-all text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-white hover:rotate-12 shadow-sm"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-[var(--theme-text)]/[0.03] border border-[var(--theme-text)]/5 transition-all text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-white hover:rotate-12 active:scale-90 shadow-sm"
+              aria-label="Toggle Theme"
             >
-              {theme === 'dark' ? <FaSun size={14} /> : <FaMoon size={14} />}
+              {theme === 'dark' ? <FaSun size={14} className="animate-in zoom-in duration-300" /> : <FaMoon size={14} className="animate-in zoom-in duration-300" />}
             </button>
+          ) : (
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--theme-text)]/[0.03] border border-[var(--theme-text)]/5 animate-pulse" />
           )}
 
           <button 

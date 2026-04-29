@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import CustomCursor from "@/components/CustomCursor";
 import FloatingElements from "@/components/FloatingElements";
 import PerformanceOptimizer from "@/components/PerformanceOptimizer";
+import StatsTracker from "@/components/StatsTracker";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   // Fetch profile for global use (like name in footer/navbar)
@@ -23,6 +24,7 @@ export default async function PublicLayout({ children }: { children: React.React
       </div>
 
       <PerformanceOptimizer />
+      <StatsTracker />
       <CustomCursor />
       <FloatingElements />
 

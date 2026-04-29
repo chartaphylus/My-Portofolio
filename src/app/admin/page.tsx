@@ -3,7 +3,28 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  ResponsiveContainer, 
+  CartesianGrid 
+} from 'recharts';
+import { 
+  FiMonitor, 
+  FiSmartphone, 
+  FiTablet, 
+  FiGlobe, 
+  FiExternalLink, 
+  FiRefreshCw, 
+  FiTrendingUp,
+  FiArrowUpRight,
+  FiLayout,
+  FiCompass,
+  FiChrome
+} from 'react-icons/fi';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -14,6 +35,9 @@ export default function AdminDashboard() {
     views: 0
   });
   const [chartData, setChartData] = useState<any[]>([]);
+  const [topPages, setTopPages] = useState<any[]>([]);
+  const [deviceData, setDeviceData] = useState<any[]>([]);
+  const [browserData, setBrowserData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,27 +47,65 @@ export default function AdminDashboard() {
         { count: expCount },
         { count: eduCount },
         { count: certCount },
-        { data: viewStats }
+        { data: viewStats },
+        { data: dailyData },
+        { data: pageStats }
       ] = await Promise.all([
         supabase.from('projects').select('*', { count: 'exact', head: true }),
         supabase.from('experience').select('*', { count: 'exact', head: true }),
         supabase.from('education').select('*', { count: 'exact', head: true }),
         supabase.from('certifications').select('*', { count: 'exact', head: true }),
-        supabase.from('site_stats').select('*').order('month_year', { ascending: true })
+        supabase.from('site_stats').select('*').order('month_year', { ascending: true }),
+        supabase.from('daily_traffic').select('*').order('date', { ascending: false }).limit(7),
+        supabase.from('traffic_stats').select('*').order('view_count', { ascending: false }).limit(5)
       ]);
 
       const totalViews = viewStats?.reduce((acc, curr) => acc + curr.view_count, 0) || 0;
 
-      // Format data for chart
-      const formattedChartData = (viewStats || []).map(stat => {
-        const date = new Date(stat.month_year + '-01');
-        return {
-          name: date.toLocaleDateString('default', { month: 'short', year: '2-digit' }),
-          views: stat.view_count
-        };
+      // Format real daily data
+      const formattedDailyData = (dailyData || []).reverse().map(d => ({
+        name: new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short' }),
+        views: d.view_count,
+        users: d.unique_users
+      }));
+
+      // Aggregate device and browser data from all pages
+      const devices = { desktop: 0, mobile: 0, tablet: 0 };
+      const browsers = { chrome: 0, safari: 0, firefox: 0, edge: 0, others: 0 };
+      
+      const { data: allPageStats } = await supabase.from('traffic_stats').select('*');
+      
+      allPageStats?.forEach(p => {
+        devices.desktop += p.desktop_count || 0;
+        devices.mobile += p.mobile_count || 0;
+        devices.tablet += p.tablet_count || 0;
+        browsers.chrome += p.chrome_count || 0;
+        browsers.safari += p.safari_count || 0;
+        browsers.firefox += p.firefox_count || 0;
+        browsers.edge += p.edge_count || 0;
+        browsers.others += p.others_count || 0;
       });
 
-      setChartData(formattedChartData);
+      const totalDeviceViews = (devices.desktop + devices.mobile + devices.tablet) || 1;
+      const devData = [
+        { device: 'DESKTOP', percentage: Math.round((devices.desktop / totalDeviceViews) * 100), icon: FiMonitor, color: '#39FF14' },
+        { device: 'MOBILE', percentage: Math.round((devices.mobile / totalDeviceViews) * 100), icon: FiSmartphone, color: '#3B82F6' },
+        { device: 'TABLET', percentage: Math.round((devices.tablet / totalDeviceViews) * 100), icon: FiTablet, color: '#A855F7' },
+      ];
+
+      const totalBrowserViews = (browsers.chrome + browsers.safari + browsers.firefox + browsers.edge + browsers.others) || 1;
+      const brData = [
+        { name: 'Chrome', percentage: Math.round((browsers.chrome / totalBrowserViews) * 100), icon: FiChrome },
+        { name: 'Safari', percentage: Math.round((browsers.safari / totalBrowserViews) * 100), icon: FiCompass },
+        { name: 'Firefox', percentage: Math.round((browsers.firefox / totalBrowserViews) * 100), icon: FiGlobe },
+        { name: 'Edge', percentage: Math.round((browsers.edge / totalBrowserViews) * 100), icon: FiLayout },
+        { name: 'Others', percentage: Math.round((browsers.others / totalBrowserViews) * 100), icon: FiGlobe },
+      ];
+
+      setChartData(formattedDailyData);
+      setTopPages(pageStats || []);
+      setDeviceData(devData);
+      setBrowserData(brData);
       setStats({
         projects: projCount || 0,
         experience: expCount || 0,
@@ -57,134 +119,247 @@ export default function AdminDashboard() {
     fetchStats();
   }, []);
 
-  const statItems = [
-    { label: "Total Projects", value: stats.projects, color: "from-blue-500 to-cyan-500" },
-    { label: "Experience Records", value: stats.experience, color: "from-purple-500 to-pink-500" },
-    { label: "Education History", value: stats.education, color: "from-green-500 to-teal-500" },
-    { label: "Awards & Certificates", value: stats.certificates, color: "from-orange-500 to-yellow-500" },
-  ];
-
   if (loading) return (
     <div className="h-full pt-10 flex items-center justify-center">
        <div className="flex flex-col items-center gap-4">
          <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
-         <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Loading comprehensive overview...</span>
+         <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Loading analytic dashboard...</span>
        </div>
     </div>
   );
 
   return (
-    <div className="animate-in fade-in duration-500 pb-20">
+    <div className="pb-20 space-y-8 animate-in fade-in duration-500">
       <AdminPageHeader 
-        title="Dashboard Overview" 
-        description="A high-level summary of your portfolio infrastructure and visitor analytics."
+        title="TRAFFIC & STATISTIK" 
+        description="Analisis mendalam mengenai penggunaan dan performa sistem."
         action={
-          <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-xs font-semibold text-green-600 dark:text-green-400">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            System Live
-          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="p-2.5 bg-white/5 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-gray-500 dark:text-gray-400 hover:text-cyan-500 transition-all shadow-lg"
+          >
+            <FiRefreshCw className="w-4 h-4" />
+          </button>
         }
       />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {statItems.map((item, i) => (
-          <div key={i} className="relative p-6 border border-white/10 dark:border-white/5 rounded-3xl bg-white/50 dark:bg-black/40 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-white/5 overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-             <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${item.color} rounded-full blur-[50px] opacity-20 group-hover:opacity-40 transition-opacity`}></div>
-             <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 relative z-10">{item.label}</p>
-             <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white relative z-10">
-               {item.value}
-             </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Chart (Tren Pengunjung) */}
+        <div className="lg:col-span-2 bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-xl overflow-hidden group">
+          <div className="flex items-center justify-between mb-10">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 flex items-center gap-2">
+              <FiTrendingUp className="w-3.5 h-3.5 text-cyan-500" />
+              TREN PENGUNJUNG (7 HARI TERAKHIR)
+            </h3>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-cyan-500" />
+                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">TOTAL VIEWS</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-purple-500" />
+                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">UNIQUE USERS</span>
+              </div>
+            </div>
           </div>
-        ))}
+          
+          <div className="h-[320px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a855f7" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.1} />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#888" 
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false}
+                  dy={10}
+                />
+                <YAxis 
+                  stroke="#888" 
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                    border: '1px solid rgba(255,255,255,0.1)', 
+                    borderRadius: '12px',
+                    fontSize: '10px',
+                    color: '#fff'
+                  }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="views" 
+                  stroke="#06b6d4" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorViews)" 
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="users" 
+                  stroke="#a855f7" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorUsers)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Right Section (Devices + Sessions) */}
+        <div className="space-y-6">
+          <div className="bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-xl">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8 text-center">DISTRIBUSI PERANGKAT</h3>
+            <div className="space-y-8">
+              {deviceData.length > 0 ? deviceData.map((item) => (
+                <div key={item.device} className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <item.icon className="w-4 h-4 text-gray-500" />
+                      <span className="text-[10px] font-black text-gray-700 dark:text-gray-300 tracking-widest">{item.device}</span>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-cyan-500">{item.percentage}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-gray-200 dark:bg-white/5 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-1000"
+                      style={{ width: `${item.percentage}%`, backgroundColor: item.color }}
+                    />
+                  </div>
+                </div>
+              )) : (
+                <div className="py-10 text-center text-[10px] text-gray-500 uppercase tracking-widest font-black">
+                  Memuat data perangkat...
+                </div>
+              )}
+            </div>
+
+            <div className="mt-12 pt-10 border-t border-gray-200 dark:border-white/5 text-center">
+              <p className="text-[9px] text-gray-500 font-black uppercase tracking-[0.25em] mb-3">TOTAL SESI BULAN INI</p>
+              <h4 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{stats.views.toLocaleString()}</h4>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Left (Popular Pages) */}
+        <div className="lg:col-span-2 bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-3xl overflow-hidden backdrop-blur-xl shadow-xl">
+          <div className="p-8 border-b border-gray-200 dark:border-white/5">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">HALAMAN TERPOPULER</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="text-[9px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-[0.2em] border-b border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-white/5">
+                  <th className="px-8 py-5">HALAMAN ARSIP</th>
+                  <th className="px-8 py-5 text-center">TOTAL TAYANGAN</th>
+                  <th className="px-8 py-5 text-center">PERUBAHAN</th>
+                  <th className="px-8 py-5 text-right">PREVIEW</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-white/5">
+                {topPages.length > 0 ? topPages.map((page, i) => (
+                  <tr key={i} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group">
+                    <td className="px-8 py-5">
+                      <span className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400/90 tracking-tight">{page.path}</span>
+                    </td>
+                    <td className="px-8 py-5 text-center">
+                      <span className="text-[12px] font-black text-gray-900 dark:text-white">{(page.view_count || 0).toLocaleString()}</span>
+                    </td>
+                    <td className="px-8 py-5 text-center">
+                      <span className="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-full">+12%</span>
+                    </td>
+                    <td className="px-8 py-5 text-right">
+                      <a href={page.path} target="_blank" className="inline-flex p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg transition-all">
+                        <FiExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={4} className="px-8 py-20 text-center text-gray-500 uppercase text-[10px] font-black tracking-widest">
+                      Belum ada data traffic.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Bottom Right (Top Browsers) */}
+        <div className="bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-xl">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 flex items-center gap-2 mb-10">
+            <FiGlobe className="w-4 h-4 text-purple-500" />
+            TOP BROWSERS
+          </h3>
+          <div className="space-y-7">
+            {browserData.length > 0 ? browserData.map((browser) => (
+              <div key={browser.name} className="flex items-center justify-between group cursor-default">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 bg-gray-100 dark:bg-white/5 rounded-lg border border-transparent group-hover:border-gray-200 dark:group-hover:border-white/10 transition-colors">
+                    <browser.icon className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+                  </div>
+                  <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">{browser.name}</span>
+                </div>
+                <span className="text-[11px] font-mono font-black text-gray-700 dark:text-gray-300">{browser.percentage}%</span>
+              </div>
+            )) : (
+              <div className="py-10 text-center text-[10px] text-gray-500 uppercase tracking-widest font-black">
+                Memuat data browser...
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chart Section */}
-        <div className="lg:col-span-2 border border-white/10 dark:border-white/5 rounded-3xl bg-white/50 dark:bg-black/40 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-white/5 p-8 flex flex-col">
-           <div className="flex justify-between items-end mb-8 border-b border-gray-200 dark:border-white/10 pb-4">
-             <div>
-               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Visitor Analytics</h3>
-               <p className="text-sm text-gray-500 dark:text-gray-400">Total profile views over time</p>
-             </div>
-             <div className="text-right">
-               <p className="text-sm text-gray-500 dark:text-gray-400">Total Views</p>
-               <h3 className="text-2xl font-bold text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">
-                 {stats.views}
-               </h3>
-             </div>
-           </div>
-           
-           <div className="flex-1 min-h-[300px] w-full relative">
-             {chartData.length > 0 ? (
-               <ResponsiveContainer width="100%" height="100%">
-                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                   <defs>
-                     <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                       <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.8}/>
-                       <stop offset="95%" stopColor="#a855f7" stopOpacity={0.8}/>
-                     </linearGradient>
-                   </defs>
-                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.2} />
-                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} dy={10} />
-                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-                   <Tooltip 
-                     cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} 
-                     contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} 
-                   />
-                   <Bar dataKey="views" fill="url(#colorViews)" radius={[6, 6, 0, 0]} barSize={40} />
-                 </BarChart>
-               </ResponsiveContainer>
-             ) : (
-               <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                 No view data available yet.
-               </div>
-             )}
+      {/* Quick Actions (Repositioned) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+        <div className="border border-gray-200 dark:border-white/10 rounded-3xl bg-white/50 dark:bg-black/40 backdrop-blur-xl p-8">
+           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
+             Quick Actions
+           </h3>
+           <div className="grid grid-cols-1 gap-4">
+              {[
+                { label: 'Add Project', sub: 'Deploy a new item', color: 'cyan', link: '/admin/projects' },
+                { label: 'Update Experience', sub: 'Add chronological records', color: 'purple', link: '/admin/experience' },
+                { label: 'Edit Profile', sub: 'Modify biographical info', color: 'pink', link: '/admin/profile' },
+              ].map((action) => (
+                <a key={action.label} href={action.link} className="group flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-black/50 border border-transparent hover:border-cyan-500/30 transition-all duration-300">
+                   <div>
+                     <p className={`text-sm font-semibold text-gray-900 dark:text-white group-hover:text-cyan-500 transition-colors`}>{action.label}</p>
+                     <p className="text-xs text-gray-500">{action.sub}</p>
+                   </div>
+                   <FiArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                </a>
+              ))}
            </div>
         </div>
 
-        {/* Quick Actions & Info */}
-        <div className="space-y-8">
-          <div className="border border-white/10 dark:border-white/5 rounded-3xl bg-white/50 dark:bg-black/40 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-white/5 p-8">
-             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-white/10 pb-4">
-               Quick Actions
-             </h3>
-             <div className="space-y-4">
-                <a href="/admin/projects" className="group flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-black/50 border border-transparent hover:border-cyan-500/30 transition-all duration-300">
-                   <div>
-                     <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-cyan-500 transition-colors">Add Project</p>
-                     <p className="text-xs text-gray-500">Deploy a new portfolio item</p>
-                   </div>
-                   <span className="w-8 h-8 rounded-full bg-white dark:bg-[#1A1A1A] flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-white transition-colors">→</span>
-                </a>
-                <a href="/admin/experience" className="group flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-black/50 border border-transparent hover:border-purple-500/30 transition-all duration-300">
-                   <div>
-                     <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-purple-500 transition-colors">Update Experience</p>
-                     <p className="text-xs text-gray-500">Add chronological records</p>
-                   </div>
-                   <span className="w-8 h-8 rounded-full bg-white dark:bg-[#1A1A1A] flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">→</span>
-                </a>
-                <a href="/admin/profile" className="group flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-black/50 border border-transparent hover:border-pink-500/30 transition-all duration-300">
-                   <div>
-                     <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-pink-500 transition-colors">Edit Profile</p>
-                     <p className="text-xs text-gray-500">Modify biographical info</p>
-                   </div>
-                   <span className="w-8 h-8 rounded-full bg-white dark:bg-[#1A1A1A] flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-colors">→</span>
-                </a>
+        <div className="border border-gray-200 dark:border-white/10 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#111] dark:to-[#0A0A0A] p-8 shadow-inner">
+           <div className="flex items-center gap-3 mb-4">
+             <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+               <span className="text-blue-500 text-lg">ℹ️</span>
              </div>
-          </div>
-
-          <div className="border border-white/10 dark:border-white/5 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#111] dark:to-[#0A0A0A] shadow-inner p-8">
-             <div className="flex items-center gap-3 mb-4">
-               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                 <span className="text-blue-500 text-lg">ℹ️</span>
-               </div>
-               <h4 className="font-bold text-gray-900 dark:text-white">Storage Policy</h4>
-             </div>
-             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-               Direct media upload is enabled. Any deleted items from your repository will automatically cascade and remove associated files from Supabase Storage to maintain efficient capacity.
-             </p>
-          </div>
+             <h4 className="font-bold text-gray-900 dark:text-white">Storage Policy</h4>
+           </div>
+           <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+             Direct media upload is enabled. Any deleted items from your repository will automatically cascade and remove associated files from Supabase Storage to maintain efficient capacity.
+           </p>
         </div>
       </div>
     </div>

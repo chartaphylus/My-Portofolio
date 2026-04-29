@@ -11,15 +11,17 @@ A state-of-the-art, professional portfolio built with **Next.js 15**, **Supabase
 - **Interactive Backgrounds**: Orbiting particles and custom cursors for an immersive experience.
 - **Dynamic Content**: Real-time fetching of Projects, Skills, Experience, and Education from Supabase.
 - **Project Archive**: Filterable projects with multi-image support and live/source links.
-- **Premium Loading States**: Custom futuristic loading animations across all pages.
+- **Real-Time Traffic Tracking**: Integrated visitor tracking system for paths, browsers, and devices.
+- **Premium Loading States**: Custom futuristic loading animations and skeletons across all pages.
 - **Responsive & SEO Optimized**: Flawless experience on all devices with meta tags for search engines.
 
-### 🛡️ Admin Dashboard
+### 🛡️ Admin Dashboard (HUD-Style)
+- **High-Tech UI**: New HUD-inspired statistics dashboard with immersive visual design.
+- **Real Analytics**: Visualized visitor trends (7-day chart), device distribution, and popular pages.
 - **Secure Infrastructure**: Protected by Supabase Authentication.
-- **Analytics Overview**: Visualized visitor statistics using Recharts.
 - **Full CRUD Support**: Manage all portfolio data via intuitive slide-out drawer interfaces.
 - **Direct Media Management**: Integrated Supabase Storage with automated cleanup (auto-delete orphan files).
-- **Custom Notifications**: Integrated toast system and confirmation modals for all operations.
+- **SEO Health Monitoring**: Integrated Telegram notifications for SEO alerts and 404 detections.
 
 ## 🚀 Tech Stack
 

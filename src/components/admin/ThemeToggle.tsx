@@ -15,10 +15,10 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-1.5 rounded-md bg-gray-100 dark:bg-[#1A1A1A] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#333] transition-colors border border-gray-200 dark:border-[#333]"
+      className="p-1.5 rounded-md bg-gray-100 dark:bg-[#1A1A1A] text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#333] transition-all active:scale-90 border border-gray-200 dark:border-[#333]"
       aria-label="Toggle Dark Mode"
     >
-      {theme === "dark" ? <FaSun size={14} /> : <FaMoon size={14} />}
+      {theme === "dark" ? <FaSun size={14} className="animate-in zoom-in duration-300" /> : <FaMoon size={14} className="animate-in zoom-in duration-300" />}
     </button>
   );
 }
